@@ -1,0 +1,283 @@
+{
+	"swagger":"2.0",
+	"info":{
+		"description":"Welcome to the online developer documentation of NIDOMA REST API Service.",
+		"version":"1.0",
+		"title":"WEHUNT REST API",
+		"termsOfService":"",
+		"contact":{
+			"email":"leonardo.alia@yahoo.it"
+		},
+		"license":{
+			"name":"wehunt License","url":"https://www.wehunt.eu/"
+		}
+	},
+	"basePath":"/api",
+	"tags":[{
+		"name":"user",
+		"description":"User related calls"
+	},{
+		"name":"breweries",
+		"description":"breweries related calls"
+	}],
+	"schemes":["http"],
+	"paths":{
+		"/user/register":{
+			"post":{
+				"tags":["user"],
+				"summary":"REGISTER",
+				"description":"register user",
+				"operationId":"register",
+				"consumes":["application/json"],
+				"produces":["application/json"],
+				"parameters":[{
+					"in":"body",
+					"name":"body",
+					"required":true,
+					"schema":{"$ref":"#/definitions/usr_reg"}
+				}],"responses":{
+					"200":{
+						"description":"If user is registerd successfully.",
+						"schema":{
+							"$ref":"#/definitions/RegisterResponse"
+						}
+					},"401":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"404":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"422":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"500":{
+						"schema":{"$ref":"#/definitions/error"}
+					}
+				}
+			}
+		},
+		"/user/login":{
+			"post":{
+				"tags":["user"],
+				"summary":"LOGIN",
+				"description":"logs user in with username and password",
+				"operationId":"login",
+				"consumes":["application/json"],
+				"produces":["application/json"],
+				"parameters":[{
+					"in":"body",
+					"name":"body",
+					"required":true,
+					"schema":{"$ref":"#/definitions/usr_log"}
+				}],"responses":{
+					"200":{
+						"description":"If user is logged successfully.",
+						"schema":{
+							"$ref":"#/definitions/AccessTokenResponse"
+						}
+					},"401":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"404":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"422":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"500":{
+						"schema":{"$ref":"#/definitions/error"}
+					}
+				}
+			}
+		},
+		"/user/logout":{
+			"post":{
+				"tags":["user"],
+				"summary":"LOGOUT",
+				"description":"logs out user",
+				"operationId":"logout",
+				"consumes":["application/json"],
+				"produces":["application/json"],
+				"parameters":[{
+					"in":"header",
+					"name":"authorization",
+					"required":true,
+					"type":"string",
+					"description":"Access token &#39;Bearer [token]&#39;"
+				}],"responses":{
+					"200":{
+						"description":"If user is logged out successfully.",
+						"schema":{
+							"$ref":"#/definitions/LogoutResponse"
+						}
+					},"401":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"404":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"422":{
+						"schema":{"$ref":"#/definitions/error"}
+					},"500":{
+						"schema":{"$ref":"#/definitions/error"}
+					}
+				}
+			}
+		},"/breweries":{
+			"get":{
+				"tags":["breweries"],
+				"summary":"Get breweries list",
+				"description":"Returns a list of breweries.",
+				"operationId":"getBreweriesList",
+				"produces":["application/json"],
+				"parameters":[{
+					"in":"header",
+					"name":"authorization",
+					"required":true,
+					"type":"string",
+					"description":"Access token &#39;Bearer [token]&#39;"
+				},{
+					"name":"per_page",
+					"in":"query",
+					"description":"Number results per page: min 5, max 50",
+					"type":"integer"
+				},{
+					"name":"page",
+					"in":"query",
+					"description":"Number of the current page",
+					"type":"integer"
+				}],"responses":{
+					"200":{
+						"description":"Breweries list retrieved successfully.",
+						"schema":{
+							"$ref":"#/definitions/breweriesResponse"
+						}
+					},"400":{
+						"description":"Validation errors",
+						"schema":{"$ref":"#/definitions/error"}
+					},"404":{
+						"description":"Not found errors",
+						"schema":{"$ref":"#/definitions/error"}
+					},"500":{
+						"description":"Internal server errors",
+						"schema":{"$ref":"#/definitions/error"}
+					}
+				}
+			}
+		},"/breweries/meta":{
+			"get":{
+				"tags":["breweries"],
+				"summary":"Get breweries list info",
+				"description":"Returns numeric info about the list.",
+				"operationId":"getBreweriesMeta",
+				"produces":["application/json"],
+				"parameters":[{
+					"in":"header",
+					"name":"authorization",
+					"required":true,
+					"type":"string",
+					"description":"Access token &#39;Bearer [token]&#39;"
+				}],"responses":{
+					"200":{
+						"description":"Breweries meta retrieved successfully.",
+						"schema":{
+							"$ref":"#/definitions/breweriesMetaResponse"
+						}
+					},"400":{
+						"description":"Validation errors",
+						"schema":{"$ref":"#/definitions/error"}
+					},"404":{
+						"description":"Not found errors",
+						"schema":{"$ref":"#/definitions/error"}
+					},"500":{
+						"description":"Internal server errors",
+						"schema":{"$ref":"#/definitions/error"}
+					}
+				}
+			}
+		}
+	},"definitions":{
+		"error":{
+			"type":"object",
+			"required":["message"],
+			"properties":{
+				"message":{
+					"type":"string",
+					"description":"Error message"
+				},"error":{
+					"type":"object",
+					"description":"Error descriptions",
+					"items":{"$ref":"#/definitions/errorObject"}
+				}
+			}
+		},"errorObject":{
+			"type":"object",
+			"items":{"$ref":"#/definitions/errorArrayDetail"}
+		},"errorArrayDetail":{
+			"type":"string"
+		},"usr_reg":{
+			"type":"object",
+			"required":["name","email","password"],
+			"properties":{
+				"name":{"type":"string"},
+				"email":{"type":"string"},
+				"password":{"type":"string"}
+			}
+		},"usr_log":{
+			"type":"object",
+			"required":["email","password"],
+			"properties":{
+				"email":{"type":"string"},
+				"password":{"type":"string"}
+			}
+		},"AccessTokenResponse":{
+			"type":"object",
+			"required":["token"],
+			"properties":{
+				"token":{"type":"string"}
+			}
+		},"RegisterResponse":{
+			"type":"object",
+			"required":["name","email"],
+			"properties":{
+				"name":{"type":"string"},
+				"email":{"type":"string"}
+			}
+		},"LogoutResponse":{
+			"type":"object",
+			"required":["name","email"],
+			"properties":{
+				"message":{"type":"string"}
+			}
+		},"breweriesMetaResponse":{
+			"type":"object",
+			"items":{"$ref":"#/definitions/breweryMetaObj"}
+		},"breweriesResponse":{
+			"type":"array",
+			"items":{"$ref":"#/definitions/breweryObj"}
+		},"breweryMetaObj":{
+			"type":"object",
+			"required":["total"],
+			"properties":{
+				"total":{"type":"string"},
+				"page":{"type":"string"},
+				"per_page":{"type":"string"}
+			}
+		},"breweryObj":{
+			"type":"object",
+			"required":["id"],
+			"properties":{
+				"id":{"type":"string"},
+				"name":{"type":"string"},
+				"brewery_type":{"type":"string"},
+				"address_1":{"type":"string"},
+				"address_2":{"type":"string"},
+				"address_3":{"type":"string"},
+				"city":{"type":"string"},
+				"state_province":{"type":"string"},
+				"postal_code":{"type":"string"},
+				"country":{"type":"string"},
+				"longitude":{"type":"string"},
+				"latitude":{"type":"string"},
+				"phone":{"type":"string"},
+				"website_url":{"type":"string"},
+				"state":{"type":"string"},
+				"street":{"type":"string"}
+			}
+		}
+	},"externalDocs":{
+		"description":"","url":""
+	}
+}

@@ -1,0 +1,4 @@
+/vendor
+/DELETEME.txt
+/.phpunit.result.cache
+/*.log
