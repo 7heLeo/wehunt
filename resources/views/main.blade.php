@@ -79,8 +79,7 @@ angular.module('weHunt', ['ngMaterial', 'ngMessages']).config(function($mdThemin
 			url: 'api/breweries?per_page='+$scope.itemsPerPage+'&page='+$scope.curPage,
 			headers: {'authorization': "Bearer "+localStorage.getItem("userToken")}
 		}).then(function(result) {
-			json = result.data;
-			console.log(json)			
+			json = result.data;	
 			if(typeof json === 'object'){
 				$scope.list=json;
 			}else{
