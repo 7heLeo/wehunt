@@ -13,12 +13,19 @@ RIPRISTINO CARTELLA VENDOR: RUN > composer install
 
 ##
 DATABASE MySQL 5.7.39
+
 Dati di accesso al database così come configurati nei file .env .env.testing:
+
 HOST = 127.0.0.1
+
 PORT = 3306
+
 DATABASE = wehunt
+
 USERNAME = root
+
 PASSWORD = root
+
 
 Il Database non è incluso e dovrebbe essere ospitato in un servizio esterno, quindi cambiata la configurazione di conseguenza.
 
